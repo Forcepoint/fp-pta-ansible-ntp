@@ -1,0 +1,23 @@
+---
+# Tasks file for ntp that are Windows specific.
+
+# https://community.spiceworks.com/how_to/5765-configure-windows-server-to-query-an-external-ntp-server
+
+- name: Stop the time service
+  win_service:
+    name: w32time
+    state: stopped
+
+- name: Set the time server
+  win_command: "w32tm /config /syncfromflags:manual /manualpeerlist:\"{{ ntp_server }}\""
+
+- name: Set the connection as reliable
+  win_command: w32tm /config /reliable:yes
+
+- name: Start the time service
+  win_service:
+    name: w32time
+    state: started
+
+- name: Set the timezone
+  win_command: "tzutil /s \"{{ ntp_timezone_win }}\""

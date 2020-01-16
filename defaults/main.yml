@@ -1,0 +1,5 @@
+---
+# defaults file for ntp
+
+ntp_timezone: MST7MDT
+ntp_timezone_win: "Mountain Standard Time"

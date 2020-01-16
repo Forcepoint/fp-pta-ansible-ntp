@@ -1,0 +1,11 @@
+---
+# tasks file for ntp
+
+- include_tasks: Windows.yml
+  when: ansible_os_family == "Windows"
+
+- include_tasks: CentOS7.yml
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version <= '7'
+
+- include_tasks: CentOS8.yml
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version > '7'

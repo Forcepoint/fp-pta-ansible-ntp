@@ -1,0 +1,33 @@
+---
+# Tasks file for ntp that are RedHat/CentOS specific.
+
+- name: set localtime
+  become: yes
+  file:
+    src: /usr/share/zoneinfo/{{ ntp_timezone }}
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+- name: install ntp
+  become: yes
+  yum:
+    name: ntp
+    state: latest
+
+- name: place the ntp configuration
+  become: yes
+  template:
+    src: templates/ntp.conf.j2
+    dest: /etc/ntp.conf
+
+- name: start ntpd
+  become: yes
+  service:
+    name: ntpd
+    state: restarted
+    enabled: yes
+
+- name: sync hwclock
+  become: yes
+  shell: hwclock -w

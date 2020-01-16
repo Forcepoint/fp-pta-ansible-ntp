@@ -1,0 +1,33 @@
+---
+# Tasks file for ntp that are RedHat/CentOS specific.
+
+- name: set localtime
+  become: yes
+  file:
+    src: /usr/share/zoneinfo/{{ ntp_timezone }}
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+- name: install chrony
+  become: yes
+  yum:
+    name: chrony
+    state: latest
+
+- name: place the chrony configuration
+  become: yes
+  template:
+    src: templates/chrony.conf.j2
+    dest: /etc/chrony.conf
+
+- name: start chronyd
+  become: yes
+  service:
+    name: chronyd
+    state: restarted
+    enabled: yes
+
+- name: sync hwclock
+  become: yes
+  shell: hwclock -w
